@@ -1,0 +1,35 @@
+package com.hy.demo;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Component;
+
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
+
+@Component
+public class SmsListener {
+	
+	@Autowired
+	private SmsUtil smsUtil;
+
+	@JmsListener(destination="hy_map")
+	public void sendSms(Map<String,String> map){
+		
+		try {
+			SendSmsResponse response = smsUtil.sendSms(map.get("mobile"),
+					map.get("name") );
+			System.out.println("code:"+response.getCode());
+			System.out.println("message:"+response.getMessage());
+			
+		
+		} catch (ClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+}
